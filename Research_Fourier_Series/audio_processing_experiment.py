@@ -30,11 +30,11 @@ dft_x = rfftfreq(num_samples, 1 / sampling_rate) # Gives the bins
 
 ## Apply inverse DFT to regain original wave
 
-### I am picking few peaks to remove noise
-### Note: Peak picking can be done in better ways through other metrics... This is like feature extraction
-num_peaks = 40
-max_nth = np.partition(np.abs(dft_y), -num_peaks)[-num_peaks] # Returns the magnitude of nth largest element in O(len(dft_y)) 
-mask = np.abs(dft_y) < max_nth
+### I am removing all frequencies that have amplitude less than <min_amplitude_ratio> times max amplitude
+### NOTE: There are better ways to extract the most useful features.. this is still naive
+min_amplitude_ratio = 0.1 # w.r.t. the max amplitude
+min_amplitude_req = np.max(np.abs(dft_y)) * min_amplitude_ratio
+mask = np.abs(dft_y) < min_amplitude_req
 dft_y_augmented = dft_y.copy()
 dft_y_augmented[mask] = 0
 
@@ -60,7 +60,7 @@ last_nonzero = len(mask) - np.flip(mask).argmax() - 1
 
 plt.plot(dft_x[:last_nonzero+10], np.abs(dft_y_augmented)[:last_nonzero+10])
 
-plt.title(f"Top {num_peaks} peaks of input audio's frequency domain")
+plt.title(f"Top {np.count_nonzero(mask)} peaks of input audio's frequency domain")
 plt.xlabel("Frequency")
 plt.ylabel("Amplitude")
 plt.savefig("example_frequency_domain.png")

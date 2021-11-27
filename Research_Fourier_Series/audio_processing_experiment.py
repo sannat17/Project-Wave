@@ -40,7 +40,7 @@ dft_y_augmented[mask] = 0
 
 reproduced_sig = irfft(dft_y_augmented)
     # Save reproducted signal in a wav file just to compare if it sounds similar
-soundfile.write("reproduce_exampole_StarWars.wav", reproduced_sig, sampling_rate)
+soundfile.write("reproduced_example_StarWars.wav", reproduced_sig, sampling_rate)
 librosa.display.waveshow(reproduced_sig, sr=sampling_rate, ax=ax[1])
 ax[1].set(title="Audio converted back to time domain by inverse DFT")
 ax[1].label_outer()
